@@ -54,7 +54,7 @@ function App() {
       return;
     }
     auth
-      .getContent(localStorage.getItem('jwt'))
+      .getContent(token)
       .then((res) => {
         setLoggedIn(true);
         setCurrentUser((user) => ({
@@ -233,7 +233,7 @@ function App() {
               <Register
                 onRegister={handleRegistration}
               />
-            <Footer />
+            
             </Route>
           
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -247,6 +247,7 @@ function App() {
                 onCardLike={handleCardLike}
               />
             </ProtectedRoute>
+            <Footer />
           </Switch>
             <PopupProfile
                 isOpen={isEditProfilePopupOpen}
