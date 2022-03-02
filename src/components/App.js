@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Switch, BrowserRouter, useHistory, Redirect } from 'react-router-dom';import api from "../utils/api";
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';import api from "../utils/api";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
@@ -24,7 +24,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
   const [currentUser, setCurrentUser] = useState(user);
-  const [successRegistration, setSuccessRegistraion] = useState(false);
+  const [successRegistration, setSuccessRegistration] = useState(false);
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,13 +80,18 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
-          setSuccessRegistraion(true);
+          setSuccessRegistration(true);
+          history.push("/signin")
         } 
       })
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsInfoTooltipOpen(true));
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
+        
+      });
+
     }
 
   const handleAuthorization = (email, password) => {
@@ -99,8 +104,11 @@ function App() {
         }
       })
       .catch((err) => {
+        setSuccessRegistration(false);
         console.log(err);
+        setIsInfoTooltipOpen(true);
       });
+      
   }
 
   const handleLogout = () => {
@@ -225,14 +233,9 @@ function App() {
               <Register
                 onRegister={handleRegistration}
               />
-              <InfoTooltip
-                isOpen={isInfoTooltipOpen}
-                successRegistration={successRegistration}
-                onClose={closeAllPopups}
-              />
-              
-              <Footer />
+            <Footer />
             </Route>
+          
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
               <Main
                 onEditProfile={handleEditProfileClick}
@@ -243,7 +246,9 @@ function App() {
                 onCardDelete={handleCardDelete}
                 onCardLike={handleCardLike}
               />
-              <PopupProfile
+            </ProtectedRoute>
+          </Switch>
+            <PopupProfile
                 isOpen={isEditProfilePopupOpen}
                 onClose={closeAllPopups}
                 onUpdateUser={handleUpdateUser}
@@ -262,11 +267,15 @@ function App() {
                 card={selectedCard} 
                 onClose={closeAllPopups} 
               />
-            </ProtectedRoute>
-            <Route path="*">
-              <Redirect to="/" />
-            </Route>
-          </Switch>
+              <InfoTooltip
+                isOpen={isInfoTooltipOpen}
+                successRegistration={successRegistration}
+                onClose={closeAllPopups}
+              />
+              <Route path="*">
+                <Redirect to="/" />
+              </Route>
+          
         </LoadingContext.Provider>
       </CurrentUserContext.Provider>
     </div>

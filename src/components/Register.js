@@ -50,7 +50,9 @@ const Register = ({onRegister}) => {
         </button>
 
       </div>
-      <Link to="signin" className="form__link">Уже зарегистрированы? Войти</Link>
+      <p class="form__text">
+        Уже зарегистрированы? <Link to="signin" className="form__link">Войти</Link>
+      </p>
     </form>
   )
 }
