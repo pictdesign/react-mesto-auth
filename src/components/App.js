@@ -80,16 +80,15 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
+          history.push("/signin");
           setSuccessRegistration(true);
-          history.push("/signin")
-        } 
+        }
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
         setIsInfoTooltipOpen(true);
-        
       });
 
     }
@@ -104,8 +103,8 @@ function App() {
         }
       })
       .catch((err) => {
-        setSuccessRegistration(false);
         console.log(err);
+        setSuccessRegistration(false);
         setIsInfoTooltipOpen(true);
       });
       
@@ -233,7 +232,7 @@ function App() {
               <Register
                 onRegister={handleRegistration}
               />
-            
+              
             </Route>
           
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -268,14 +267,16 @@ function App() {
                 card={selectedCard} 
                 onClose={closeAllPopups} 
               />
+              
+              <Route path="*">
+                <Redirect to="/signin" />
+              </Route>
+
               <InfoTooltip
                 isOpen={isInfoTooltipOpen}
                 successRegistration={successRegistration}
                 onClose={closeAllPopups}
               />
-              <Route path="*">
-                <Redirect to="/" />
-              </Route>
           
         </LoadingContext.Provider>
       </CurrentUserContext.Provider>
