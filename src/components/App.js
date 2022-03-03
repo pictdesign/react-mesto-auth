@@ -76,6 +76,7 @@ function App() {
   }, []);
 
   const handleRegistration = (email, password) => {
+    setSuccessRegistration(false);
     return auth
       .register(email, password)
       .then((res) => {
